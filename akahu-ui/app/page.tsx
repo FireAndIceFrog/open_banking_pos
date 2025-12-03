@@ -1,21 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { Account } from "../features/accountListing/types/Account";
+import { AccountListingScreen } from "@/features/accountListing/screen";
 
 export default function HomePage() {
-  const [output, setOutput] = useState<any>(null);
-
-  const fetchAccounts = async () => {
-    const res = await fetch("/api/v1/accounts");
-    const data = await res.json();
-    setOutput(data);
-  };
-
   return (
-    <div>
-      <h1>Akahu Demo (Next.js API)</h1>
-      <button onClick={fetchAccounts}>Fetch Accounts</button>
-      <pre>{output ? JSON.stringify(output, null, 2) : "Click to load"}</pre>
+    <div className="min-h-screen flex flex-col items-center gap-6 p-8 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <h1 className="text-2xl font-bold m-0">Akahu Demo</h1>
+      <p className="m-0 text-gray-500 dark:text-gray-400">Next.js + Akahu POC</p>
+
+      <AccountListingScreen />
     </div>
   );
 }

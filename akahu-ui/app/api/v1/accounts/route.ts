@@ -1,29 +1,32 @@
 import { NextResponse } from "next/server";
-import axios from "axios";
-
-const { APP_TOKEN, USER_TOKEN, AKAHU_API_BASE = "https://api.akahu.io/v1" } =
-  process.env;
-
-const defaultHeaders = {
-  Authorization: `Bearer ${USER_TOKEN}`,
-  "X-Akahu-Id": APP_TOKEN!,
-};
+import { AkahuServiceInstance } from "@/app/services/akahuService";
+import { Account } from "akahu";
 
 export async function GET() {
   try {
-    const auth = await axios.get(`${AKAHU_API_BASE}/me`, {
-      headers: defaultHeaders,
-    });
+    const accounts = await AkahuServiceInstance.getAccounts();
 
-    if (auth.status !== 200) {
-      console.error("Failed to authenticate with Akahu API:", auth.statusText);
-      return NextResponse.json({ error: "Authentication failed" }, { status: 401 });
+    const formattedAccounts = accounts
+    .filter(x => x.status === 'ACTIVE')
+    .map((account: Account) => ({
+      _id: account._id,
+      name: account.name,
+      number: account.formatted_account,
+      type: account.type,
+      institution: account.connection.name,
+      "balance": {
+        "currency": "NZD",
+        "current": 200,
+        "overdrawn": false
+      }
+    }));
+
+    if (formattedAccounts.length === 0) {
+      return NextResponse.json({ message: "No active accounts found" }, { status: 404 });
     }
-    
-    const res = await axios.get(`${AKAHU_API_BASE}/accounts`, {
-      headers: defaultHeaders,
-    });
-    return NextResponse.json(res.data);
+
+
+    return NextResponse.json(formattedAccounts);
   } catch (err: any) {
     console.error(err.response?.data || err.message);
     return NextResponse.json({ error: "Failed to fetch accounts" }, { status: 500 });

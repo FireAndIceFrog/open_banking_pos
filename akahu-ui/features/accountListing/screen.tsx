@@ -1,5 +1,6 @@
 "use client";
 import { useGetAccountsQuery } from "./state/slice"
+import AccountCard from "./components/AccountCard"
 
 export const AccountListingScreen = () => {
 
@@ -17,17 +18,11 @@ export const AccountListingScreen = () => {
         )
     }
 
-    // we want to display a 2 column grid of accounts
+    // responsive grid: single column on small screens, two columns from sm+
     return (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="w-full flex flex-wrap gap-4 justify-center ">
             {accounts?.map((account) => (
-                <section key={account._id} className="border p-4 rounded shadow">
-                    <h2 className="text-lg font-bold">{account.name}</h2>
-                    <p>{account.number}</p>
-                    <p>{account.type}</p>
-
-                    <p className="my-2" >{account.balance.currency} {account.balance.current}</p>
-                </section>
+                <AccountCard key={account._id} account={account} />
             ))}
         </div>
     )   

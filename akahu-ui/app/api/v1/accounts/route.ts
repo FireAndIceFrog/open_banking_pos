@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { AkahuServiceInstance } from "@/app/services/akahuService";
-import { Account, Party } from "akahu";
-import { Account as AccountType } from "@/features/accountListing/types/Account";
+import { Account } from "akahu";
+
 export async function GET() {
   try {
     const accounts = await AkahuServiceInstance.getAccounts();
@@ -20,7 +20,7 @@ export async function GET() {
         current: 200,
         overdrawn: false
       }
-    } as AccountType));
+    }));
 
     if (formattedAccounts.length === 0) {
       return NextResponse.json({ message: "No active accounts found" }, { status: 404 });

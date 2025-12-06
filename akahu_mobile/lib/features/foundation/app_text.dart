@@ -36,16 +36,27 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth),
-        child: Card(
-          child: Padding(
-            padding: padding,
-            child: child,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableW = constraints.maxWidth;
+        final availableH = constraints.maxHeight;
+        // Ensure min width of 400px when possible; on small screens, use full width.
+        final double minW = availableW >= 400 ? 400 : availableW;
+        final double minH = availableH >= 400 ? 400 : availableH; 
+        final double maxW = maxWidth;
+
+        return Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: minW, maxWidth: maxW, minHeight: minH),
+            child: Card(
+              child: Padding(
+                padding: padding,
+                child: child,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

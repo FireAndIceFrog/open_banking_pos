@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PaymentServiceInstance } from '../../../../../../features/payment/services/paymentService';
 import { ConfirmPaymentRequest, ConfirmPaymentRequestInput } from '@/features/payment/types/request/ConfirmPaymentRequest';
 import { ConfirmPaymentResponse } from '@/features/payment/types/response/ConfirmPaymentResponse';
 import { IntentIdSchema } from '@/features/payment/types/params/IntentIdParamsSchema';
+import { container } from '@/features/foundation/di/container';
+import { TYPES } from '@/features/foundation/di/types';
+import { PaymentService } from '@/features/payment/services/paymentService';
 
 export async function POST(req: NextRequest, { params }: { params: { intentId: string } }) {
   try {
@@ -25,7 +27,8 @@ export async function POST(req: NextRequest, { params }: { params: { intentId: s
       return NextResponse.json({ success: false, data: { reason } }, { status: 400 });
     }
 
-    const result: ConfirmPaymentResponse = await PaymentServiceInstance.confirmIntent(intentId, body);
+    const paymentService = container.get<PaymentService>(TYPES.PaymentService);
+    const result: ConfirmPaymentResponse = await paymentService.confirmIntent(intentId, body);
     return NextResponse.json(result, { status: result.success ? 200 : 400 });
   } catch {
     return NextResponse.json({ success: false, data: { reason: 'Invalid request' } }, { status: 400 });

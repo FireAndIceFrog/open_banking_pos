@@ -1,10 +1,10 @@
 // In-memory repository for PaymentIntent
-
-import { PaymentStatus } from "akahu";
 import { PaymentIntent } from "../types/model/PaymentIntent";
+import { IPaymentRepo } from "./IPaymentRepo";
+import { injectable } from "inversify";
 
-
-class InMemoryPaymentRepo {
+@injectable()
+export class InMemoryPaymentRepo implements IPaymentRepo {
   private store: Map<string, PaymentIntent> = new Map();
 
   create(intent: PaymentIntent) {
@@ -28,5 +28,3 @@ class InMemoryPaymentRepo {
     return updated;
   }
 }
-
-export const PaymentRepo = new InMemoryPaymentRepo();

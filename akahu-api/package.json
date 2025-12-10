@@ -12,11 +12,13 @@
     "@reduxjs/toolkit": "^2.11.0",
     "akahu": "^2.3.0",
     "axios": "^1.13.2",
+    "inversify": "^7.10.6",
     "next": "16.0.6",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-qr-code": "^2.0.18",
     "react-redux": "^9.2.0",
+    "reflect-metadata": "^0.2.2",
     "uuidv7": "^1.1.0",
     "zod": "^4.1.13"
   },

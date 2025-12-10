@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { Account } from "akahu";
 import { AccountType } from "@/features/accounts/types/AccountType";
-import { AkahuServiceInstance } from "@/features/foundation/services/akahuService";
+import { container } from '@/features/foundation/di/container';
+import { TYPES } from '@/features/foundation/di/types';
+import { AkahuService } from "@/features/foundation/services/akahuService";
 
 export async function GET() {
   try {
-    const accounts = await AkahuServiceInstance.getAccounts();
+    const akahuService = container.get<AkahuService>(TYPES.AkahuService);
+    const accounts = await akahuService.getAccounts();
     const formattedAccounts = accounts
     .filter(x => x.status === 'ACTIVE')
     .map((account: Account) => ({

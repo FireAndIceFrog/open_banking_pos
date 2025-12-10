@@ -1,7 +1,5 @@
-// PaymentService orchestrates payment intents using in-memory repo and akahuService
-
-import { AkahuServiceInstance } from '../../foundation/services/akahuService';
-import { PaymentRepo } from '../repo/paymentRepo';
+import type { IPaymentRepo } from '../repo/IPaymentRepo';
+import { inject, injectable } from 'inversify';
 import { CreatePaymentRequestInput } from '../types/request/CreatePaymentRequest';
 import { ConfirmPaymentRequestInput } from '../types/request/ConfirmPaymentRequest';
 import { CreatePaymentResponse } from '../types/response/CreatePaymentResponse';
@@ -9,10 +7,15 @@ import { ConfirmPaymentResponse } from '../types/response/ConfirmPaymentResponse
 import { GetPaymentStatusResponse } from '../types/response/GetPaymentStatusResponse';
 import { PaymentIntent } from '../types/model/PaymentIntent';
 import { uuidv7 } from 'uuidv7';
+import { TYPES } from '@/features/foundation/di/types';
 
+@injectable()
 export class PaymentService {
+  constructor(
+    @inject(TYPES.PaymentRepo) private repo: IPaymentRepo,
+  ) {}
+
   async createIntent(payload: CreatePaymentRequestInput): Promise<CreatePaymentResponse> {
-    // Payload has been validated via Zod in the route
     const { toUserId, amount } = payload;
 
     const amountCents = Math.round(amount * 100);
@@ -28,7 +31,7 @@ export class PaymentService {
       updatedAt: nowIso,
     };
 
-    PaymentRepo.create(intent);
+    this.repo.create(intent);
 
     return {
       success: true,
@@ -37,14 +40,10 @@ export class PaymentService {
   }
 
   async getStatus(intentId: string): Promise<GetPaymentStatusResponse> {
-    // intentId validated in the route
-    const intent = PaymentRepo.get(intentId);
+    const intent = this.repo.get(intentId);
     if (!intent) {
       return { success: false, data: { status: 'DECLINED', reason: 'Intent not found' } };
     }
-
-    // Optional reconciliation with Akahu when we have a transferId (not implemented in akahuService yet)
-    // If future: use AkahuServiceInstance to check transfer status and update.
 
     return {
       success: true,
@@ -56,24 +55,16 @@ export class PaymentService {
   }
 
   async confirmIntent(intentId: string, payload: ConfirmPaymentRequestInput): Promise<ConfirmPaymentResponse> {
-    // intentId and payload validated in the route
     const { fromUserId } = payload;
-    const intent = PaymentRepo.get(intentId);
+    const intent = this.repo.get(intentId);
     if (!intent) {
       return { success: false, data: { reason: 'Intent not found' } };
     }
 
-    // Placeholder: integrate Akahu transfer initiation when available.
-    // For now, mark as complete to unblock POS flow.
-    // Future:
-    // const accounts = await AkahuServiceInstance.getAccounts();
-    // Use accounts/fromUserId/toUserId mapping to initiate transfer and set akahuTransferId/status accordingly.
-
-    const updated = PaymentRepo.update(intentId, {
+    const updated = this.repo.update(intentId, {
       fromUserId,
       status: 'SENT',
       reason: undefined,
-      // akahuTransferId: 'placeholder',
     });
 
     if (!updated) {
@@ -83,5 +74,3 @@ export class PaymentService {
     return { success: true, data: {} };
   }
 }
-
-export const PaymentServiceInstance = new PaymentService();

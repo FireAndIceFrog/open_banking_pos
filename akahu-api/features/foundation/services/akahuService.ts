@@ -1,8 +1,10 @@
-import { AkahuClient } from 'akahu';
+import { Account, AkahuClient } from 'akahu';
 
 export const InMemoryAkahuStore = {
     userToken: process.env.USER_TOKEN || '',
 };
+
+export const accountLists: Record<string, Account[]> = {}
 
 export class AkahuService {
     private client: AkahuClient;
@@ -19,7 +21,8 @@ export class AkahuService {
 
     async getAccounts() {
         const token = InMemoryAkahuStore.userToken;
-        return this.client.accounts.list(token);
+        accountLists[token] = await this.client.accounts.list(token);
+        return accountLists[token];
     }
 }
 

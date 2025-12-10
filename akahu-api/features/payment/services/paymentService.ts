@@ -16,9 +16,8 @@ export class PaymentService {
   ) {}
 
   async createIntent(payload: CreatePaymentRequestInput): Promise<CreatePaymentResponse> {
-    const { toUserId, amount } = payload;
+    const { toUserId, amountCents } = payload;
 
-    const amountCents = Math.round(amount * 100);
     const intentId = uuidv7();
     const nowIso = new Date().toISOString();
 

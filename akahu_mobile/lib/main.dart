@@ -1,3 +1,4 @@
+import 'package:akahu_mobile/features/foundation/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

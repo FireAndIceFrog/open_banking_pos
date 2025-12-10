@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../foundation/app_text.dart';
 import '../../foundation/app_colors.dart';
+import '../../foundation/components/app_card.dart';
 import '../types/account.dart';
 
 class AccountCard extends StatelessWidget {

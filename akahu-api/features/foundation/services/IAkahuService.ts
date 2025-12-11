@@ -3,6 +3,5 @@
 import type { Account } from 'akahu';
 
 export interface IAkahuService {
-  getAccounts(): Promise<Account[]>;
-  // Future: initiateTransfer(...), getTransferStatus(...), etc.
+  getAccounts(userToken: string): Promise<Account[]>;
 }

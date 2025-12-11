@@ -3,4 +3,6 @@ export const TYPES = {
   PaymentRepo: Symbol('PaymentRepo'),
   AkahuService: Symbol('AkahuService'),
   PaymentService: Symbol('PaymentService'),
+  AccountRepo: Symbol('AccountRepo'),
+  AccountService: Symbol('AccountService'),
 } as const;

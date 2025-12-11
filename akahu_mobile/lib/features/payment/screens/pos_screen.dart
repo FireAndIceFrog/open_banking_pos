@@ -105,10 +105,10 @@ class PosScreen extends HookConsumerWidget {
 
         const SizedBox(height: 16),
 
-        if (paymentState.intentId != null) ...[
+        if (paymentState.paymentIntent?.intentId != null) ...[
           Center(
             child: QrImageView(
-              data: paymentState.intentId!,
+              data: paymentState.paymentIntent!.intentId!,
               version: QrVersions.auto,
               size: 220,
               backgroundColor: Colors.white,
@@ -117,8 +117,8 @@ class PosScreen extends HookConsumerWidget {
           const SizedBox(height: 12),
         ],
 
-        if (paymentState.status != null)
-          StatusBanner(status: paymentState.status!, reason: paymentState.reason),
+        if (paymentState.paymentIntent?.status != null)
+          StatusBanner(status: paymentState.paymentIntent!.status!, reason: paymentState.paymentIntent!.reason),
       ],
     );
   }

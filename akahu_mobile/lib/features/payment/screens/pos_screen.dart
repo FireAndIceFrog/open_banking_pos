@@ -52,74 +52,82 @@ class PosScreen extends HookConsumerWidget {
       final selected = ref.read(selectedAccountProvider);
       if (selected == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Select an account first from Accounts')),
+          const SnackBar(
+            content: Text('Select an account first from Accounts'),
+          ),
         );
         return;
       }
       final toUserId = selected.id; // use selected account id as target
       final amt = double.tryParse(amount.value.replaceAll('\$', '')) ?? 0.0;
-      await controller.create(toUserId: toUserId, amount: amt);
+      await controller.create(
+        toUserId: toUserId,
+        amountCents: (amt * 100).toInt(),
+      );
       controller.startPolling();
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Point of Sale', style: AppText.h2),
-        const SizedBox(height: 12),
-        Text('Enter amount and tap Start to generate a QR for the POS.', style: AppText.bodySecondary),
-        const SizedBox(height: 16),
+      children: paymentState.paymentIntent?.intentId == null
+          ? [
+              Text('Point of Sale', style: AppText.h2),
+              const SizedBox(height: 12),
+              Text(
+                'Enter amount and tap Start to generate a QR for the POS.',
+                style: AppText.bodySecondary,
+              ),
+              const SizedBox(height: 16),
 
-        // Amount display
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-          decoration: BoxDecoration(
-            color: AppColors.tertiary.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.tertiary),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Amount', style: AppText.subtitle),
-              Text('\$${amount.value}', style: AppText.value),
+              // Amount display
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.tertiary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.tertiary),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Amount', style: AppText.subtitle),
+                    Text('\$${amount.value}', style: AppText.value),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Numpad input
+              Numpad(
+                onDigit: _appendDigit,
+                onBackspace: _backspace,
+                onClear: _clear,
+              ),
+
+              const SizedBox(height: 16),
+
+              ElevatedButton(onPressed: _start, child: const Text('Start')),
+            ]
+          : [
+              Center(
+                child: QrImageView(
+                  data: paymentState.paymentIntent!.intentId!,
+                  version: QrVersions.auto,
+                  size: 220,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 12),
+              if (paymentState.paymentIntent?.status != null)
+                StatusBanner(
+                  status: paymentState.paymentIntent!.status!,
+                  reason: paymentState.paymentIntent!.reason,
+                ),
             ],
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        // Numpad input
-        Numpad(
-          onDigit: _appendDigit,
-          onBackspace: _backspace,
-          onClear: _clear,
-        ),
-
-        const SizedBox(height: 16),
-
-        ElevatedButton(
-          onPressed: _start,
-          child: const Text('Start'),
-        ),
-
-        const SizedBox(height: 16),
-
-        if (paymentState.paymentIntent?.intentId != null) ...[
-          Center(
-            child: QrImageView(
-              data: paymentState.paymentIntent!.intentId!,
-              version: QrVersions.auto,
-              size: 220,
-              backgroundColor: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 12),
-        ],
-
-        if (paymentState.paymentIntent?.status != null)
-          StatusBanner(status: paymentState.paymentIntent!.status!, reason: paymentState.paymentIntent!.reason),
-      ],
     );
   }
 }

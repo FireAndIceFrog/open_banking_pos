@@ -5,9 +5,9 @@ import { IntentIdSchema } from '@/features/payment/types/params/IntentIdParamsSc
 import { container } from '@/features/foundation/di/container';
 import { TYPES } from '@/features/foundation/di/types';
 
-export async function GET(_req: NextRequest, { params }: { params: { intentId: string } }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ intentId: string }> }) {
   try {
-    const intentId = params.intentId;
+    const intentId = (await params).intentId;
 
     // Zod-validated intentId
     try {

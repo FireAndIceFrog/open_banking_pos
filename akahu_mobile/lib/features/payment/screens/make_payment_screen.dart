@@ -15,18 +15,15 @@ class MakePaymentScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scannedIntentId = useState<String?>(null);
     final paymentState = ref.watch(paymentControllerProvider);
     final controller = ref.read(paymentControllerProvider.notifier);
     final selectedAccount = ref.watch(selectedAccountProvider);
 
     void _onScan(String code) {
-      scannedIntentId.value = code;
       controller.setScannedIntent(code);
     }
 
     Future<void> _confirm() async {
-      if (scannedIntentId.value == null) return;
       if (selectedAccount == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Select an account first from Accounts')),
@@ -97,7 +94,7 @@ class MakePaymentScreen extends HookConsumerWidget {
         const SizedBox(height: 16),
 
         ElevatedButton(
-          onPressed: scannedIntentId.value != null ? _confirm : null,
+          onPressed: paymentState.paymentIntent?.intentId != null ? _confirm : null,
           child: const Text('Confirm Payment'),
         ),
 

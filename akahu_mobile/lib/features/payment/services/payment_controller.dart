@@ -36,12 +36,12 @@ class PaymentController extends Notifier<PaymentState> {
 
   Future<void> create({
     required String toUserId,
-    required double amount,
+    required int amountCents,
   }) async {
     final paymentIntent = PaymentIntent(
       intentId: null,
       toUserId: toUserId,
-      amountCents: int.parse((amount.toStringAsFixed(2) * 100)),
+      amountCents: amountCents,
       fromUserId: null,
       status: null,
     );
@@ -99,7 +99,7 @@ class PaymentController extends Notifier<PaymentState> {
         status: null,
       ),
     );
-    
+
     if (reason != null) {
       state = state.copyWith(
         paymentIntent: state.paymentIntent?.copyWith(reason: reason)

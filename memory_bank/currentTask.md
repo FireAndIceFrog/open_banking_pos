@@ -46,3 +46,17 @@ Basically what happens is the POS systemn will need to create a payment intent, 
 
 The flow is 
 POS creates -> POS polls -> user confirms -> poll success -> post displays success.
+
+2. The next step we are implementing is the actual UI. 
+
+We need 2 screens and a way to navigate between them 
+2.1. POS screen. This is a screen with the numbers 0-9 and a "Start" button Each button must be at least 48px x 48px for acccessibility and must use the style guides we have. Once the start button is shown, a QR tag is shown which can be scanned. Once the payment is successful a big green tick appears and shows success.
+
+-> creates the payment 
+-> polls the payment till its done
+
+The second screen is the "make payment" screen one of the account in the account listing screen has a circled check at the bottom right of the card. That one is used to make a payment. 
+
+The payment screen is initiated from a popup icon on the bottom right of the account listing screen. It scans a QR code and then updates the payment with the account details for the from account
+
+-> updates the payment with the from account details

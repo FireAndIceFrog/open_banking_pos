@@ -4,7 +4,7 @@ import 'package:akahu_mobile/features/foundation/models/default_response/default
 import 'package:http/http.dart';
 
 extension ResponseExtension on Response {
-  T? tryGetData<T>(dynamic? fac) {
+  T? tryGetData<T>(dynamic fac) {
     if (statusCode < 200 || statusCode >= 300) {
       throw Exception('HTTP $statusCode');
     }

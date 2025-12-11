@@ -26,13 +26,21 @@ export async function GET() {
     } as AccountType));
 
     if (formattedAccounts.length === 0) {
-      return NextResponse.json({ message: "No active accounts found" }, { status: 404 });
+      return NextResponse.json({
+        success: false, 
+        data: { reason: 'No active accounts found' },
+      }, { status: 404 });
     }
 
-
-    return NextResponse.json(formattedAccounts);
+    return NextResponse.json({
+      success: true,
+      data: formattedAccounts
+    });
   } catch (err: any) {
     console.error(err.response?.data || err.message);
-    return NextResponse.json({ error: "Failed to fetch accounts" }, { status: 500 });
+    return NextResponse.json({ 
+        success: false, 
+        data: { reason: 'Failed to fetch accounts' },
+    }, { status: 500 });
   }
 }

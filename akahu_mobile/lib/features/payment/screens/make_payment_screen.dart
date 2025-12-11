@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../foundation/app_text.dart';
-import '../../foundation/app_colors.dart';
 import '../components/status_banner.dart';
-import '../services/payment_api_service.dart';
 import '../services/payment_controller.dart';
 import '../../accounts/providers/selected_account_provider.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -30,7 +27,7 @@ class MakePaymentScreen extends HookConsumerWidget {
         );
         return;
       }
-      final fromUserId = selectedAccount.id; // use selected account id for confirm
+      final fromUserId = selectedAccount.id!; // use selected account id for confirm
       await controller.confirm(fromUserId: fromUserId);
     }
 

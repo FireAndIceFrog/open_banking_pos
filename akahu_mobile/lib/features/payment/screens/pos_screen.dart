@@ -58,7 +58,7 @@ class PosScreen extends HookConsumerWidget {
         );
         return;
       }
-      final toUserId = selected.id; // use selected account id as target
+      final toUserId = selected.id!; // use selected account id as target
       final amt = double.tryParse(amount.value.replaceAll('\$', '')) ?? 0.0;
       await controller.create(
         toUserId: toUserId,

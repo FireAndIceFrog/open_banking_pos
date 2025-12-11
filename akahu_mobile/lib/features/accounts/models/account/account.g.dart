@@ -22,13 +22,15 @@ Map<String, dynamic> _$$BalanceImplToJson(_$BalanceImpl instance) =>
 
 _$AccountImpl _$$AccountImplFromJson(Map<String, dynamic> json) =>
     _$AccountImpl(
-      id: json['_id'] as String,
-      name: json['name'] as String,
-      number: json['number'] as String,
-      accountHolderName: json['accountHolderName'] as String,
-      type: json['type'] as String,
-      institution: json['institution'] as String,
-      balance: Balance.fromJson(json['balance'] as Map<String, dynamic>),
+      id: json['_id'] as String?,
+      name: json['name'] as String?,
+      number: json['number'] as String?,
+      accountHolderName: json['accountHolderName'] as String?,
+      type: json['type'] as String?,
+      institution: json['institution'] as String?,
+      balance: json['balance'] == null
+          ? null
+          : Balance.fromJson(json['balance'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$AccountImplToJson(_$AccountImpl instance) =>

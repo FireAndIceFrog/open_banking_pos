@@ -231,19 +231,19 @@ Account _$AccountFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Account {
   @JsonKey(name: '_id')
-  String get id => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'name')
-  String get name => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'number')
-  String get number => throw _privateConstructorUsedError;
+  String? get number => throw _privateConstructorUsedError;
   @JsonKey(name: 'accountHolderName')
-  String get accountHolderName => throw _privateConstructorUsedError;
+  String? get accountHolderName => throw _privateConstructorUsedError;
   @JsonKey(name: 'type')
-  String get type => throw _privateConstructorUsedError;
+  String? get type => throw _privateConstructorUsedError;
   @JsonKey(name: 'institution')
-  String get institution => throw _privateConstructorUsedError;
+  String? get institution => throw _privateConstructorUsedError;
   @JsonKey(name: 'balance')
-  Balance get balance => throw _privateConstructorUsedError;
+  Balance? get balance => throw _privateConstructorUsedError;
 
   /// Serializes this Account to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -260,16 +260,16 @@ abstract class $AccountCopyWith<$Res> {
       _$AccountCopyWithImpl<$Res, Account>;
   @useResult
   $Res call({
-    @JsonKey(name: '_id') String id,
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'number') String number,
-    @JsonKey(name: 'accountHolderName') String accountHolderName,
-    @JsonKey(name: 'type') String type,
-    @JsonKey(name: 'institution') String institution,
-    @JsonKey(name: 'balance') Balance balance,
+    @JsonKey(name: '_id') String? id,
+    @JsonKey(name: 'name') String? name,
+    @JsonKey(name: 'number') String? number,
+    @JsonKey(name: 'accountHolderName') String? accountHolderName,
+    @JsonKey(name: 'type') String? type,
+    @JsonKey(name: 'institution') String? institution,
+    @JsonKey(name: 'balance') Balance? balance,
   });
 
-  $BalanceCopyWith<$Res> get balance;
+  $BalanceCopyWith<$Res>? get balance;
 }
 
 /// @nodoc
@@ -287,44 +287,44 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? number = null,
-    Object? accountHolderName = null,
-    Object? type = null,
-    Object? institution = null,
-    Object? balance = null,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? number = freezed,
+    Object? accountHolderName = freezed,
+    Object? type = freezed,
+    Object? institution = freezed,
+    Object? balance = freezed,
   }) {
     return _then(
       _value.copyWith(
-            id: null == id
+            id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            name: null == name
+                      as String?,
+            name: freezed == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            number: null == number
+                      as String?,
+            number: freezed == number
                 ? _value.number
                 : number // ignore: cast_nullable_to_non_nullable
-                      as String,
-            accountHolderName: null == accountHolderName
+                      as String?,
+            accountHolderName: freezed == accountHolderName
                 ? _value.accountHolderName
                 : accountHolderName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            type: null == type
+                      as String?,
+            type: freezed == type
                 ? _value.type
                 : type // ignore: cast_nullable_to_non_nullable
-                      as String,
-            institution: null == institution
+                      as String?,
+            institution: freezed == institution
                 ? _value.institution
                 : institution // ignore: cast_nullable_to_non_nullable
-                      as String,
-            balance: null == balance
+                      as String?,
+            balance: freezed == balance
                 ? _value.balance
                 : balance // ignore: cast_nullable_to_non_nullable
-                      as Balance,
+                      as Balance?,
           )
           as $Val,
     );
@@ -334,8 +334,12 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $BalanceCopyWith<$Res> get balance {
-    return $BalanceCopyWith<$Res>(_value.balance, (value) {
+  $BalanceCopyWith<$Res>? get balance {
+    if (_value.balance == null) {
+      return null;
+    }
+
+    return $BalanceCopyWith<$Res>(_value.balance!, (value) {
       return _then(_value.copyWith(balance: value) as $Val);
     });
   }
@@ -350,17 +354,17 @@ abstract class _$$AccountImplCopyWith<$Res> implements $AccountCopyWith<$Res> {
   @override
   @useResult
   $Res call({
-    @JsonKey(name: '_id') String id,
-    @JsonKey(name: 'name') String name,
-    @JsonKey(name: 'number') String number,
-    @JsonKey(name: 'accountHolderName') String accountHolderName,
-    @JsonKey(name: 'type') String type,
-    @JsonKey(name: 'institution') String institution,
-    @JsonKey(name: 'balance') Balance balance,
+    @JsonKey(name: '_id') String? id,
+    @JsonKey(name: 'name') String? name,
+    @JsonKey(name: 'number') String? number,
+    @JsonKey(name: 'accountHolderName') String? accountHolderName,
+    @JsonKey(name: 'type') String? type,
+    @JsonKey(name: 'institution') String? institution,
+    @JsonKey(name: 'balance') Balance? balance,
   });
 
   @override
-  $BalanceCopyWith<$Res> get balance;
+  $BalanceCopyWith<$Res>? get balance;
 }
 
 /// @nodoc
@@ -377,44 +381,44 @@ class __$$AccountImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? number = null,
-    Object? accountHolderName = null,
-    Object? type = null,
-    Object? institution = null,
-    Object? balance = null,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? number = freezed,
+    Object? accountHolderName = freezed,
+    Object? type = freezed,
+    Object? institution = freezed,
+    Object? balance = freezed,
   }) {
     return _then(
       _$AccountImpl(
-        id: null == id
+        id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        name: null == name
+                  as String?,
+        name: freezed == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        number: null == number
+                  as String?,
+        number: freezed == number
             ? _value.number
             : number // ignore: cast_nullable_to_non_nullable
-                  as String,
-        accountHolderName: null == accountHolderName
+                  as String?,
+        accountHolderName: freezed == accountHolderName
             ? _value.accountHolderName
             : accountHolderName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        type: null == type
+                  as String?,
+        type: freezed == type
             ? _value.type
             : type // ignore: cast_nullable_to_non_nullable
-                  as String,
-        institution: null == institution
+                  as String?,
+        institution: freezed == institution
             ? _value.institution
             : institution // ignore: cast_nullable_to_non_nullable
-                  as String,
-        balance: null == balance
+                  as String?,
+        balance: freezed == balance
             ? _value.balance
             : balance // ignore: cast_nullable_to_non_nullable
-                  as Balance,
+                  as Balance?,
       ),
     );
   }
@@ -438,25 +442,25 @@ class _$AccountImpl implements _Account {
 
   @override
   @JsonKey(name: '_id')
-  final String id;
+  final String? id;
   @override
   @JsonKey(name: 'name')
-  final String name;
+  final String? name;
   @override
   @JsonKey(name: 'number')
-  final String number;
+  final String? number;
   @override
   @JsonKey(name: 'accountHolderName')
-  final String accountHolderName;
+  final String? accountHolderName;
   @override
   @JsonKey(name: 'type')
-  final String type;
+  final String? type;
   @override
   @JsonKey(name: 'institution')
-  final String institution;
+  final String? institution;
   @override
   @JsonKey(name: 'balance')
-  final Balance balance;
+  final Balance? balance;
 
   @override
   String toString() {
@@ -508,38 +512,39 @@ class _$AccountImpl implements _Account {
 
 abstract class _Account implements Account {
   const factory _Account({
-    @JsonKey(name: '_id') required final String id,
-    @JsonKey(name: 'name') required final String name,
-    @JsonKey(name: 'number') required final String number,
-    @JsonKey(name: 'accountHolderName') required final String accountHolderName,
-    @JsonKey(name: 'type') required final String type,
-    @JsonKey(name: 'institution') required final String institution,
-    @JsonKey(name: 'balance') required final Balance balance,
+    @JsonKey(name: '_id') required final String? id,
+    @JsonKey(name: 'name') required final String? name,
+    @JsonKey(name: 'number') required final String? number,
+    @JsonKey(name: 'accountHolderName')
+    required final String? accountHolderName,
+    @JsonKey(name: 'type') required final String? type,
+    @JsonKey(name: 'institution') required final String? institution,
+    @JsonKey(name: 'balance') required final Balance? balance,
   }) = _$AccountImpl;
 
   factory _Account.fromJson(Map<String, dynamic> json) = _$AccountImpl.fromJson;
 
   @override
   @JsonKey(name: '_id')
-  String get id;
+  String? get id;
   @override
   @JsonKey(name: 'name')
-  String get name;
+  String? get name;
   @override
   @JsonKey(name: 'number')
-  String get number;
+  String? get number;
   @override
   @JsonKey(name: 'accountHolderName')
-  String get accountHolderName;
+  String? get accountHolderName;
   @override
   @JsonKey(name: 'type')
-  String get type;
+  String? get type;
   @override
   @JsonKey(name: 'institution')
-  String get institution;
+  String? get institution;
   @override
   @JsonKey(name: 'balance')
-  Balance get balance;
+  Balance? get balance;
 
   /// Create a copy of Account
   /// with the given fields replaced by the non-null parameter values.

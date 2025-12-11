@@ -9,6 +9,14 @@ class SelectedAccountNotifier extends Notifier<Account?> {
     state = account;
   }
 
+  Account? get() {
+    if (state == null) {
+      return null;
+    }
+
+    return state;
+  }
+
   void clear() {
     state = null;
   }

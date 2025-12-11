@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:akahu_mobile/features/foundation/models/default_response/default_response.dart';
 import 'package:akahu_mobile/features/foundation/models/response_extension/response_extension.dart';
 import 'package:akahu_mobile/features/payment/constants/api_routes.dart';
 import 'package:akahu_mobile/features/payment/models/payment_intent/payment_intent.dart';

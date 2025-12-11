@@ -15,12 +15,12 @@ class AccountCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(account.name, style: AppText.title),
+          Text(account.name!, style: AppText.title),
           const SizedBox(height: 4),
-          Text(account.type, style: AppText.subtitle),
+          Text(account.type!, style: AppText.subtitle),
           const SizedBox(height: 8),
           Text(
-            _formatAmount(account.balance.currency, account.balance.current),
+            _formatAmount(account.balance!.currency, account.balance!.current),
             style: AppText.value.copyWith(color: AppColors.secondary),
           ),
         ],

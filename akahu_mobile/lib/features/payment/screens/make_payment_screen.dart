@@ -81,8 +81,8 @@ class MakePaymentScreen extends HookConsumerWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      paymentState.intentId != null
-                          ? 'Intent: ${paymentState.intentId!}'
+                      paymentState.paymentIntent?.intentId != null
+                          ? 'Intent: ${paymentState.paymentIntent!.intentId!}'
                           : 'Align QR within the frame',
                       style: AppText.body.copyWith(color: Colors.white),
                       textAlign: TextAlign.center,
@@ -103,8 +103,8 @@ class MakePaymentScreen extends HookConsumerWidget {
 
         const SizedBox(height: 16),
 
-        if (paymentState.status != null)
-          StatusBanner(status: paymentState.status!, reason: paymentState.reason),
+        if (paymentState.paymentIntent?.status != null)
+          StatusBanner(status: paymentState.paymentIntent!.status!, reason: paymentState.paymentIntent!.reason),
       ],
     );
   }

@@ -1,46 +1,27 @@
 import 'dart:async';
+import 'package:akahu_mobile/features/payment/models/payment_intent/payment_intent.dart';
 import 'package:akahu_mobile/features/payment/models/payment_status/payment_status.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'payment_api_service.dart';
 
 class PaymentState {
-  final PaymentStatus? status;
-  final String? reason;
-  final String? intentId;
-  final double? amount;
-  final String? toUserId;
-  final String? fromUserId;
+  final PaymentIntent? paymentIntent;
   final bool isPolling;
 
   const PaymentState({
-    this.status,
-    this.reason,
-    this.intentId,
-    this.amount,
-    this.toUserId,
-    this.fromUserId,
+    this.paymentIntent,
     this.isPolling = false,
   });
 
   PaymentState copyWith({
-    PaymentStatus? status,
-    String? reason,
-    String? intentId,
-    double? amount,
-    String? toUserId,
-    String? fromUserId,
+    PaymentIntent? paymentIntent,
     bool? isPolling,
   }) {
     return PaymentState(
-      status: status ?? this.status,
-      reason: reason ?? this.reason,
-      intentId: intentId ?? this.intentId,
-      amount: amount ?? this.amount,
-      toUserId: toUserId ?? this.toUserId,
-      fromUserId: fromUserId ?? this.fromUserId,
+      paymentIntent: paymentIntent ?? this.paymentIntent,
       isPolling: isPolling ?? this.isPolling,
     );
-    }
+  }
 }
 
 class PaymentController extends Notifier<PaymentState> {
@@ -53,49 +34,76 @@ class PaymentController extends Notifier<PaymentState> {
     return const PaymentState();
   }
 
-  Future<void> create({required String toUserId, required double amount}) async {
-    final intentId = await _api.createIntent(toUserId: toUserId, amount: double.parse(amount.toStringAsFixed(2)));
-    state = state.copyWith(
-      intentId: intentId,
-      amount: amount,
+  Future<void> create({
+    required String toUserId,
+    required double amount,
+  }) async {
+    final paymentIntent = PaymentIntent(
+      intentId: null,
       toUserId: toUserId,
-      status: PaymentStatus.pending,
-      reason: null,
+      amountCents: int.parse((amount.toStringAsFixed(2) * 100)),
+      fromUserId: null,
+      status: null,
+    );
+
+    final intentId = await _api.createIntent(
+      payment: paymentIntent
+    );
+
+    state = state.copyWith(
+      paymentIntent: paymentIntent.copyWith(
+        intentId: intentId,
+        status: PaymentStatus.PENDING_APPROVAL,
+      )
     );
   }
 
   void startPolling({Duration interval = const Duration(seconds: 10)}) {
-    if (state.intentId == null) return;
+    if (state.paymentIntent?.intentId == null) return;
     _poller?.cancel();
     state = state.copyWith(isPolling: true);
 
     _poller = Timer.periodic(interval, (timer) async {
-      final id = state.intentId;
+      final id = state.paymentIntent?.intentId;
       if (id == null) {
         stopPolling();
         return;
       }
       try {
         final (status, reason) = await _api.getIntentStatus(id);
-        state = state.copyWith(status: status, reason: reason);
-        if (status == PaymentStatus.complete || status == PaymentStatus.declined) {
+        state = state.copyWith(
+          paymentIntent: state.paymentIntent?.copyWith(status: status, reason: reason)
+        );
+        if (status == PaymentStatus.SENT || status == PaymentStatus.DECLINED) {
           stopPolling();
         }
       } catch (e) {
         // On error, keep polling, but surface reason
-        state = state.copyWith(reason: e.toString());
+        state = state.copyWith(
+          paymentIntent: state.paymentIntent?.copyWith(reason: e.toString())
+        );
       }
     });
   }
 
   Future<void> confirm({required String fromUserId}) async {
-    final id = state.intentId;
+    final id = state.paymentIntent?.intentId;
     if (id == null) return;
-    state = state.copyWith(fromUserId: fromUserId);
-    final reason = await _api.confirmIntent(intentId: id, fromUserId: fromUserId);
-    // reason may be null on success; after confirm, status will become complete by poller or server may complete immediately.
+
+    final reason = await _api.confirmIntent(
+      payment: PaymentIntent(
+        intentId: id,
+        fromUserId: fromUserId,
+        toUserId: null,
+        amountCents: null,
+        status: null,
+      ),
+    );
+    
     if (reason != null) {
-      state = state.copyWith(reason: reason);
+      state = state.copyWith(
+        paymentIntent: state.paymentIntent?.copyWith(reason: reason)
+      );
     }
   }
 
@@ -107,14 +115,22 @@ class PaymentController extends Notifier<PaymentState> {
 
   void setScannedIntent(String intentId) {
     // Used by Make Payment screen after scanning QR
-    state = state.copyWith(intentId: intentId, status: PaymentStatus.pending, reason: null);
+    state = state.copyWith(
+      paymentIntent: PaymentIntent(
+        intentId: intentId,
+        status: PaymentStatus.PENDING_APPROVAL,
+        reason: null,
+        toUserId: null,
+        fromUserId: null,
+        amountCents: null,
+      ),
+    );
   }
 
   void reset() {
     stopPolling();
     state = const PaymentState();
   }
-
 }
 
 // Providers
@@ -124,6 +140,7 @@ final paymentApiServiceProvider = Provider<PaymentApiService>((ref) {
   return service;
 });
 
-final paymentControllerProvider = NotifierProvider<PaymentController, PaymentState>(() {
-  return PaymentController();
-});
+final paymentControllerProvider =
+    NotifierProvider<PaymentController, PaymentState>(() {
+      return PaymentController();
+    });

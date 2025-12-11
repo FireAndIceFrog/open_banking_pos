@@ -1,4 +1,7 @@
-import 'dart:convert';
+import 'package:akahu_mobile/features/foundation/models/default_response/default_response.dart';
+import 'package:akahu_mobile/features/foundation/models/response_extension/response_extension.dart';
+import 'package:akahu_mobile/features/payment/constants/api_routes.dart';
+import 'package:akahu_mobile/features/payment/models/payment_intent/payment_intent.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import '../models/payment_status/payment_status.dart';
@@ -8,65 +11,38 @@ class PaymentApiService {
   final http.Client client;
 
   PaymentApiService({http.Client? client})
-      : client = client ?? http.Client(),
-        baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000';
+    : client = client ?? http.Client(),
+      baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000';
 
   Uri _url(String path) => Uri.parse('$baseUrl$path');
 
   Future<String> createIntent({
-    required String toUserId,
-    required double amount,
+    required PaymentIntent payment,
   }) async {
     final res = await client.post(
-      _url('/api/v1/payment'),
+      _url(PaymentApiRoutes.createPaymentIntent),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'toUserId': toUserId, 'amount': double.parse(amount.toStringAsFixed(2))}),
+      body: payment.toJson(),
     );
-    if (res.statusCode >= 200 && res.statusCode < 300) {
-      final data = jsonDecode(res.body) as Map<String, dynamic>;
-      final success = data['success'] == true;
-      if (!success) {
-        throw Exception(data['data']?['reason'] ?? 'Failed to create payment intent');
-      }
-      return (data['data']?['intentId'] as String?) ?? (throw Exception('intentId missing'));
-    }
-    throw Exception('HTTP ${res.statusCode}: ${res.body}');
+    
+    return res.tryGetData<PaymentIntent>(PaymentIntent.fromJson)?.intentId ?? (throw Exception('Failed to create payment intent'));
   }
 
   Future<(PaymentStatus, String?)> getIntentStatus(String intentId) async {
-    final res = await client.get(_url('/api/v1/payment/$intentId'));
-    if (res.statusCode >= 200 && res.statusCode < 300) {
-      final data = jsonDecode(res.body) as Map<String, dynamic>;
-      final success = data['success'] == true;
-      if (!success) {
-        final reason = data['data']?['reason'] as String?;
-        return (PaymentStatus.ERROR, reason);
-      }
-      final statusStr = data['data']?['status'] as String?;
-      final status = PaymentStatus.fromJson(statusStr ?? 'ERROR');
-      final reason = data['data']?['reason'] as String?;
-      return (status, reason);
-    }
-    throw Exception('HTTP ${res.statusCode}: ${res.body}');
+    final res = await client.get(_url(PaymentApiRoutes.getPaymentIntentStatus(intentId)));
+    final getPaymentResult = res.tryGetData<PaymentIntent>(PaymentIntent.fromJson) ?? (throw Exception('Failed to create payment intent'));
+    return (getPaymentResult.status ?? PaymentStatus.ERROR, getPaymentResult.reason);
   }
 
-  Future<String?> confirmIntent({
-    required String intentId,
-    required String fromUserId,
+  Future confirmIntent({
+    required PaymentIntent payment,
   }) async {
     final res = await client.post(
-      _url('/api/v1/payment/confirm/$intentId'),
+      _url(PaymentApiRoutes.confirmPaymentIntent(payment.intentId!)),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'fromUserId': fromUserId}),
+      body: payment.toJson(),
     );
-    if (res.statusCode >= 200 && res.statusCode < 300) {
-      final data = jsonDecode(res.body) as Map<String, dynamic>;
-      final success = data['success'] == true;
-      final reason = data['data']?['reason'] as String?;
-      if (!success) return reason ?? 'Confirm failed';
-      return reason; // may be null on success
-    }
-    throw Exception('HTTP ${res.statusCode}: ${res.body}');
+    res.tryGetData<DefaultResponse>(DefaultResponse.fromJson);
   }
 
   void dispose() {

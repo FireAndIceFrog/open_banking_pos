@@ -22,13 +22,15 @@ PaymentIntent _$PaymentIntentFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$PaymentIntent {
   @JsonKey(name: 'intentId')
-  String get intentId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'toAccountId')
-  String get toAccountId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'amount')
-  double get amount => throw _privateConstructorUsedError;
+  String? get intentId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'toUserId')
+  String? get toUserId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'fromUserId')
+  String? get fromUserId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'amountCents')
+  int? get amountCents => throw _privateConstructorUsedError;
   @JsonKey(name: 'status')
-  PaymentStatus get status => throw _privateConstructorUsedError;
+  PaymentStatus? get status => throw _privateConstructorUsedError;
   @JsonKey(name: 'reason')
   String? get reason => throw _privateConstructorUsedError;
 
@@ -50,10 +52,11 @@ abstract class $PaymentIntentCopyWith<$Res> {
   ) = _$PaymentIntentCopyWithImpl<$Res, PaymentIntent>;
   @useResult
   $Res call({
-    @JsonKey(name: 'intentId') String intentId,
-    @JsonKey(name: 'toAccountId') String toAccountId,
-    @JsonKey(name: 'amount') double amount,
-    @JsonKey(name: 'status') PaymentStatus status,
+    @JsonKey(name: 'intentId') String? intentId,
+    @JsonKey(name: 'toUserId') String? toUserId,
+    @JsonKey(name: 'fromUserId') String? fromUserId,
+    @JsonKey(name: 'amountCents') int? amountCents,
+    @JsonKey(name: 'status') PaymentStatus? status,
     @JsonKey(name: 'reason') String? reason,
   });
 }
@@ -73,30 +76,35 @@ class _$PaymentIntentCopyWithImpl<$Res, $Val extends PaymentIntent>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? intentId = null,
-    Object? toAccountId = null,
-    Object? amount = null,
-    Object? status = null,
+    Object? intentId = freezed,
+    Object? toUserId = freezed,
+    Object? fromUserId = freezed,
+    Object? amountCents = freezed,
+    Object? status = freezed,
     Object? reason = freezed,
   }) {
     return _then(
       _value.copyWith(
-            intentId: null == intentId
+            intentId: freezed == intentId
                 ? _value.intentId
                 : intentId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            toAccountId: null == toAccountId
-                ? _value.toAccountId
-                : toAccountId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            amount: null == amount
-                ? _value.amount
-                : amount // ignore: cast_nullable_to_non_nullable
-                      as double,
-            status: null == status
+                      as String?,
+            toUserId: freezed == toUserId
+                ? _value.toUserId
+                : toUserId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            fromUserId: freezed == fromUserId
+                ? _value.fromUserId
+                : fromUserId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            amountCents: freezed == amountCents
+                ? _value.amountCents
+                : amountCents // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            status: freezed == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
-                      as PaymentStatus,
+                      as PaymentStatus?,
             reason: freezed == reason
                 ? _value.reason
                 : reason // ignore: cast_nullable_to_non_nullable
@@ -117,10 +125,11 @@ abstract class _$$PaymentIntentImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    @JsonKey(name: 'intentId') String intentId,
-    @JsonKey(name: 'toAccountId') String toAccountId,
-    @JsonKey(name: 'amount') double amount,
-    @JsonKey(name: 'status') PaymentStatus status,
+    @JsonKey(name: 'intentId') String? intentId,
+    @JsonKey(name: 'toUserId') String? toUserId,
+    @JsonKey(name: 'fromUserId') String? fromUserId,
+    @JsonKey(name: 'amountCents') int? amountCents,
+    @JsonKey(name: 'status') PaymentStatus? status,
     @JsonKey(name: 'reason') String? reason,
   });
 }
@@ -139,30 +148,35 @@ class __$$PaymentIntentImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? intentId = null,
-    Object? toAccountId = null,
-    Object? amount = null,
-    Object? status = null,
+    Object? intentId = freezed,
+    Object? toUserId = freezed,
+    Object? fromUserId = freezed,
+    Object? amountCents = freezed,
+    Object? status = freezed,
     Object? reason = freezed,
   }) {
     return _then(
       _$PaymentIntentImpl(
-        intentId: null == intentId
+        intentId: freezed == intentId
             ? _value.intentId
             : intentId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        toAccountId: null == toAccountId
-            ? _value.toAccountId
-            : toAccountId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        amount: null == amount
-            ? _value.amount
-            : amount // ignore: cast_nullable_to_non_nullable
-                  as double,
-        status: null == status
+                  as String?,
+        toUserId: freezed == toUserId
+            ? _value.toUserId
+            : toUserId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        fromUserId: freezed == fromUserId
+            ? _value.fromUserId
+            : fromUserId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        amountCents: freezed == amountCents
+            ? _value.amountCents
+            : amountCents // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        status: freezed == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
-                  as PaymentStatus,
+                  as PaymentStatus?,
         reason: freezed == reason
             ? _value.reason
             : reason // ignore: cast_nullable_to_non_nullable
@@ -177,8 +191,9 @@ class __$$PaymentIntentImplCopyWithImpl<$Res>
 class _$PaymentIntentImpl implements _PaymentIntent {
   const _$PaymentIntentImpl({
     @JsonKey(name: 'intentId') required this.intentId,
-    @JsonKey(name: 'toAccountId') required this.toAccountId,
-    @JsonKey(name: 'amount') required this.amount,
+    @JsonKey(name: 'toUserId') required this.toUserId,
+    @JsonKey(name: 'fromUserId') required this.fromUserId,
+    @JsonKey(name: 'amountCents') required this.amountCents,
     @JsonKey(name: 'status') required this.status,
     @JsonKey(name: 'reason') this.reason,
   });
@@ -188,23 +203,26 @@ class _$PaymentIntentImpl implements _PaymentIntent {
 
   @override
   @JsonKey(name: 'intentId')
-  final String intentId;
+  final String? intentId;
   @override
-  @JsonKey(name: 'toAccountId')
-  final String toAccountId;
+  @JsonKey(name: 'toUserId')
+  final String? toUserId;
   @override
-  @JsonKey(name: 'amount')
-  final double amount;
+  @JsonKey(name: 'fromUserId')
+  final String? fromUserId;
+  @override
+  @JsonKey(name: 'amountCents')
+  final int? amountCents;
   @override
   @JsonKey(name: 'status')
-  final PaymentStatus status;
+  final PaymentStatus? status;
   @override
   @JsonKey(name: 'reason')
   final String? reason;
 
   @override
   String toString() {
-    return 'PaymentIntent(intentId: $intentId, toAccountId: $toAccountId, amount: $amount, status: $status, reason: $reason)';
+    return 'PaymentIntent(intentId: $intentId, toUserId: $toUserId, fromUserId: $fromUserId, amountCents: $amountCents, status: $status, reason: $reason)';
   }
 
   @override
@@ -214,17 +232,27 @@ class _$PaymentIntentImpl implements _PaymentIntent {
             other is _$PaymentIntentImpl &&
             (identical(other.intentId, intentId) ||
                 other.intentId == intentId) &&
-            (identical(other.toAccountId, toAccountId) ||
-                other.toAccountId == toAccountId) &&
-            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.toUserId, toUserId) ||
+                other.toUserId == toUserId) &&
+            (identical(other.fromUserId, fromUserId) ||
+                other.fromUserId == fromUserId) &&
+            (identical(other.amountCents, amountCents) ||
+                other.amountCents == amountCents) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.reason, reason) || other.reason == reason));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, intentId, toAccountId, amount, status, reason);
+  int get hashCode => Object.hash(
+    runtimeType,
+    intentId,
+    toUserId,
+    fromUserId,
+    amountCents,
+    status,
+    reason,
+  );
 
   /// Create a copy of PaymentIntent
   /// with the given fields replaced by the non-null parameter values.
@@ -242,10 +270,11 @@ class _$PaymentIntentImpl implements _PaymentIntent {
 
 abstract class _PaymentIntent implements PaymentIntent {
   const factory _PaymentIntent({
-    @JsonKey(name: 'intentId') required final String intentId,
-    @JsonKey(name: 'toAccountId') required final String toAccountId,
-    @JsonKey(name: 'amount') required final double amount,
-    @JsonKey(name: 'status') required final PaymentStatus status,
+    @JsonKey(name: 'intentId') required final String? intentId,
+    @JsonKey(name: 'toUserId') required final String? toUserId,
+    @JsonKey(name: 'fromUserId') required final String? fromUserId,
+    @JsonKey(name: 'amountCents') required final int? amountCents,
+    @JsonKey(name: 'status') required final PaymentStatus? status,
     @JsonKey(name: 'reason') final String? reason,
   }) = _$PaymentIntentImpl;
 
@@ -254,16 +283,19 @@ abstract class _PaymentIntent implements PaymentIntent {
 
   @override
   @JsonKey(name: 'intentId')
-  String get intentId;
+  String? get intentId;
   @override
-  @JsonKey(name: 'toAccountId')
-  String get toAccountId;
+  @JsonKey(name: 'toUserId')
+  String? get toUserId;
   @override
-  @JsonKey(name: 'amount')
-  double get amount;
+  @JsonKey(name: 'fromUserId')
+  String? get fromUserId;
+  @override
+  @JsonKey(name: 'amountCents')
+  int? get amountCents;
   @override
   @JsonKey(name: 'status')
-  PaymentStatus get status;
+  PaymentStatus? get status;
   @override
   @JsonKey(name: 'reason')
   String? get reason;

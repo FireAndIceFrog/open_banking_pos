@@ -8,18 +8,22 @@ part of 'payment_intent.dart';
 
 _$PaymentIntentImpl _$$PaymentIntentImplFromJson(Map<String, dynamic> json) =>
     _$PaymentIntentImpl(
-      intentId: json['intentId'] as String,
-      toAccountId: json['toAccountId'] as String,
-      amount: (json['amount'] as num).toDouble(),
-      status: PaymentStatus.fromJson(json['status'] as String),
+      intentId: json['intentId'] as String?,
+      toUserId: json['toUserId'] as String?,
+      fromUserId: json['fromUserId'] as String?,
+      amountCents: (json['amountCents'] as num?)?.toInt(),
+      status: json['status'] == null
+          ? null
+          : PaymentStatus.fromJson(json['status'] as String),
       reason: json['reason'] as String?,
     );
 
 Map<String, dynamic> _$$PaymentIntentImplToJson(_$PaymentIntentImpl instance) =>
     <String, dynamic>{
       'intentId': instance.intentId,
-      'toAccountId': instance.toAccountId,
-      'amount': instance.amount,
+      'toUserId': instance.toUserId,
+      'fromUserId': instance.fromUserId,
+      'amountCents': instance.amountCents,
       'status': instance.status,
       'reason': instance.reason,
     };

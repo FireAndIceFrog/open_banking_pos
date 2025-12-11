@@ -6,9 +6,9 @@ import { container } from '@/features/foundation/di/container';
 import { TYPES } from '@/features/foundation/di/types';
 import { PaymentService } from '@/features/payment/services/paymentService';
 
-export async function POST(req: NextRequest, { params }: { params: { intentId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ intentId: string }> }) {
   try {
-    const intentId = params.intentId;
+    const intentId = (await params).intentId;
 
     // Zod-validated intentId
     try {

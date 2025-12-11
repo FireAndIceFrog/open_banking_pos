@@ -110,7 +110,7 @@ class PaymentController extends Notifier<PaymentState> {
   void stopPolling() {
     _poller?.cancel();
     _poller = null;
-    state = state.copyWith(isPolling: false);
+    state = state.copyWith(isPolling: false, paymentIntent: null);
   }
 
   void setScannedIntent(String intentId) {

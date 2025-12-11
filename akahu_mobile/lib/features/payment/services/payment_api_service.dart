@@ -44,7 +44,7 @@ class PaymentApiService {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(payment.toJson()),
     );
-    res.tryGetData<DefaultResponse>(DefaultResponse.fromJson);
+    res.tryGetData(null);
   }
 
   void dispose() {

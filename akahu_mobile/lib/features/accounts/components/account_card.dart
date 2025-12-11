@@ -1,8 +1,8 @@
+import 'package:akahu_mobile/features/accounts/models/account/account.dart';
 import 'package:flutter/material.dart';
 import '../../foundation/app_text.dart';
 import '../../foundation/app_colors.dart';
 import '../../foundation/components/app_card.dart';
-import '../types/account.dart';
 
 class AccountCard extends StatelessWidget {
   final Account account;

@@ -1,36 +1,22 @@
 import 'dart:async';
+import 'package:akahu_mobile/features/accounts/models/account/account.dart';
+import 'package:akahu_mobile/features/accounts/providers/selected_account_provider.dart';
 import 'package:akahu_mobile/features/payment/models/payment_intent/payment_intent.dart';
+import 'package:akahu_mobile/features/payment/models/payment_state/payment_state.dart';
 import 'package:akahu_mobile/features/payment/models/payment_status/payment_status.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'payment_api_service.dart';
 
-class PaymentState {
-  final PaymentIntent? paymentIntent;
-  final bool isPolling;
-
-  const PaymentState({
-    this.paymentIntent,
-    this.isPolling = false,
-  });
-
-  PaymentState copyWith({
-    PaymentIntent? paymentIntent,
-    bool? isPolling,
-  }) {
-    return PaymentState(
-      paymentIntent: paymentIntent ?? this.paymentIntent,
-      isPolling: isPolling ?? this.isPolling,
-    );
-  }
-}
-
 class PaymentController extends Notifier<PaymentState> {
   late final PaymentApiService _api;
+  late final Account? _selectedAccount;
   Timer? _poller;
 
   @override
   PaymentState build() {
     _api = ref.watch(paymentApiServiceProvider);
+    _selectedAccount = ref.watch(selectedAccountProvider);
+    
     return const PaymentState();
   }
 
@@ -66,7 +52,7 @@ class PaymentController extends Notifier<PaymentState> {
     _poller = Timer.periodic(interval, (timer) async {
       final id = state.paymentIntent?.intentId;
       if (id == null) {
-        stopPolling();
+        _stopPolling();
         return;
       }
       try {
@@ -75,7 +61,7 @@ class PaymentController extends Notifier<PaymentState> {
           paymentIntent: state.paymentIntent?.copyWith(status: status, reason: reason)
         );
         if (status == PaymentStatus.SENT || status == PaymentStatus.DECLINED) {
-          stopPolling();
+          _stopPolling();
         }
       } catch (e) {
         // On error, keep polling, but surface reason
@@ -107,12 +93,6 @@ class PaymentController extends Notifier<PaymentState> {
     }
   }
 
-  void stopPolling() {
-    _poller?.cancel();
-    _poller = null;
-    state = state.copyWith(isPolling: false, paymentIntent: null);
-  }
-
   void setScannedIntent(String intentId) {
     // Used by Make Payment screen after scanning QR
     state = state.copyWith(
@@ -127,10 +107,12 @@ class PaymentController extends Notifier<PaymentState> {
     );
   }
 
-  void reset() {
-    stopPolling();
-    state = const PaymentState();
+  void _stopPolling() {
+    _poller?.cancel();
+    _poller = null;
+    state = state.copyWith(isPolling: false, paymentIntent: null);
   }
+
 }
 
 // Providers

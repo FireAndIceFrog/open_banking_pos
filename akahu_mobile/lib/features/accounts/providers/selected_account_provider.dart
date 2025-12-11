@@ -1,5 +1,5 @@
+import 'package:akahu_mobile/features/accounts/models/account/account.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../types/account.dart';
 
 class SelectedAccountNotifier extends Notifier<Account?> {
   @override

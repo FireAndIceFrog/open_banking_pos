@@ -116,13 +116,11 @@ class PaymentController extends Notifier<PaymentState> {
 }
 
 // Providers
-final paymentApiServiceProvider = Provider<PaymentApiService>((ref) {
-  final service = PaymentApiService();
-  ref.onDispose(service.dispose);
-  return service;
-});
 
 final paymentControllerProvider =
     NotifierProvider<PaymentController, PaymentState>(() {
       return PaymentController();
-    });
+    }, dependencies: [
+      paymentApiServiceProvider,
+      selectedAccountProvider,
+    ]);

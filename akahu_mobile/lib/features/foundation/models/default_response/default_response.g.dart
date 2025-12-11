@@ -10,7 +10,7 @@ _$DefaultResponseImpl _$$DefaultResponseImplFromJson(
   Map<String, dynamic> json,
 ) => _$DefaultResponseImpl(
   success: json['success'] as bool,
-  data: json['data'] as Map<String, dynamic>?,
+  data: json['data'] as Map<String, dynamic>,
 );
 
 Map<String, dynamic> _$$DefaultResponseImplToJson(

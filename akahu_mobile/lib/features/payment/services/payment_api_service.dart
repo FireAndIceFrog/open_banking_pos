@@ -3,6 +3,7 @@ import 'package:akahu_mobile/features/foundation/models/response_extension/respo
 import 'package:akahu_mobile/features/payment/constants/api_routes.dart';
 import 'package:akahu_mobile/features/payment/models/payment_intent/payment_intent.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../models/payment_status/payment_status.dart';
 
@@ -49,3 +50,9 @@ class PaymentApiService {
     client.close();
   }
 }
+
+final paymentApiServiceProvider = Provider<PaymentApiService>((ref) {
+  final service = PaymentApiService();
+  ref.onDispose(service.dispose);
+  return service;
+});

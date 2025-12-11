@@ -9,7 +9,7 @@ part 'default_response.g.dart';
 class DefaultResponse with _$DefaultResponse {
   const factory DefaultResponse({
     @JsonKey(name: 'success') required bool success,
-    @JsonKey(name: 'data') required Map<String, dynamic>? data,
+    @JsonKey(name: 'data') required Map<String, dynamic> data,
   }) = _DefaultResponse;
 
   factory DefaultResponse.fromJson(Map<String, dynamic> json) => _$DefaultResponseFromJson(json);

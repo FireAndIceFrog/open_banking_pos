@@ -17,7 +17,9 @@ export async function GET() {
   
       return NextResponse.json({
         success: true,
-        data: formattedAccounts
+        data: {
+          accounts: formattedAccounts,
+        }
       });
     } catch (err: any) {
       console.error(err.response?.data || err.message);

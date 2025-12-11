@@ -24,7 +24,7 @@ mixin _$DefaultResponse {
   @JsonKey(name: 'success')
   bool get success => throw _privateConstructorUsedError;
   @JsonKey(name: 'data')
-  Map<String, dynamic>? get data => throw _privateConstructorUsedError;
+  Map<String, dynamic> get data => throw _privateConstructorUsedError;
 
   /// Serializes this DefaultResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,7 +45,7 @@ abstract class $DefaultResponseCopyWith<$Res> {
   @useResult
   $Res call({
     @JsonKey(name: 'success') bool success,
-    @JsonKey(name: 'data') Map<String, dynamic>? data,
+    @JsonKey(name: 'data') Map<String, dynamic> data,
   });
 }
 
@@ -63,17 +63,17 @@ class _$DefaultResponseCopyWithImpl<$Res, $Val extends DefaultResponse>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? success = null, Object? data = freezed}) {
+  $Res call({Object? success = null, Object? data = null}) {
     return _then(
       _value.copyWith(
             success: null == success
                 ? _value.success
                 : success // ignore: cast_nullable_to_non_nullable
                       as bool,
-            data: freezed == data
+            data: null == data
                 ? _value.data
                 : data // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>?,
+                      as Map<String, dynamic>,
           )
           as $Val,
     );
@@ -91,7 +91,7 @@ abstract class _$$DefaultResponseImplCopyWith<$Res>
   @useResult
   $Res call({
     @JsonKey(name: 'success') bool success,
-    @JsonKey(name: 'data') Map<String, dynamic>? data,
+    @JsonKey(name: 'data') Map<String, dynamic> data,
   });
 }
 
@@ -108,17 +108,17 @@ class __$$DefaultResponseImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? success = null, Object? data = freezed}) {
+  $Res call({Object? success = null, Object? data = null}) {
     return _then(
       _$DefaultResponseImpl(
         success: null == success
             ? _value.success
             : success // ignore: cast_nullable_to_non_nullable
                   as bool,
-        data: freezed == data
+        data: null == data
             ? _value._data
             : data // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>?,
+                  as Map<String, dynamic>,
       ),
     );
   }
@@ -129,7 +129,7 @@ class __$$DefaultResponseImplCopyWithImpl<$Res>
 class _$DefaultResponseImpl implements _DefaultResponse {
   const _$DefaultResponseImpl({
     @JsonKey(name: 'success') required this.success,
-    @JsonKey(name: 'data') required final Map<String, dynamic>? data,
+    @JsonKey(name: 'data') required final Map<String, dynamic> data,
   }) : _data = data;
 
   factory _$DefaultResponseImpl.fromJson(Map<String, dynamic> json) =>
@@ -138,15 +138,13 @@ class _$DefaultResponseImpl implements _DefaultResponse {
   @override
   @JsonKey(name: 'success')
   final bool success;
-  final Map<String, dynamic>? _data;
+  final Map<String, dynamic> _data;
   @override
   @JsonKey(name: 'data')
-  Map<String, dynamic>? get data {
-    final value = _data;
-    if (value == null) return null;
+  Map<String, dynamic> get data {
     if (_data is EqualUnmodifiableMapView) return _data;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
+    return EqualUnmodifiableMapView(_data);
   }
 
   @override
@@ -191,7 +189,7 @@ class _$DefaultResponseImpl implements _DefaultResponse {
 abstract class _DefaultResponse implements DefaultResponse {
   const factory _DefaultResponse({
     @JsonKey(name: 'success') required final bool success,
-    @JsonKey(name: 'data') required final Map<String, dynamic>? data,
+    @JsonKey(name: 'data') required final Map<String, dynamic> data,
   }) = _$DefaultResponseImpl;
 
   factory _DefaultResponse.fromJson(Map<String, dynamic> json) =
@@ -202,7 +200,7 @@ abstract class _DefaultResponse implements DefaultResponse {
   bool get success;
   @override
   @JsonKey(name: 'data')
-  Map<String, dynamic>? get data;
+  Map<String, dynamic> get data;
 
   /// Create a copy of DefaultResponse
   /// with the given fields replaced by the non-null parameter values.

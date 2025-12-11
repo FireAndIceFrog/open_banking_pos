@@ -12,30 +12,34 @@ class AccountsService {
     final uri = AppEnv.api(AccountApiRoutes.accounts);
     final res = await http.get(uri, headers: {'Accept': 'application/json'});
 
-    return res.tryGetData<List<Account>>(
-          (List<Map<String, dynamic>> x) =>
-              x.map((e) => Account.fromJson(e)).toList(),
-        ) ??
+    final data =
+        res.tryGetData<List<Account>>((Map<String, dynamic> x) {
+          return (x['accounts'] as List<dynamic>)
+              .cast<Map<String, dynamic>>()
+              .map(Account.fromJson)
+              .toList();
+        }) ??
         [];
+    return data;
   }
 
   Future<void> setDefaultPaymentAccount(String accountNum) async {
     final uri = AppEnv.api(AccountApiRoutes.defaultAccount);
     final res = await http.post(
       uri,
-      headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
       body: jsonEncode({'accountNum': accountNum}),
     );
 
-    res.tryGetData<List<Account>>((x) => x);
+    res.tryGetData((x) => x);
   }
 
   Future<String> getDefaultAccountNum() async {
     final uri = AppEnv.api(AccountApiRoutes.defaultAccount);
-    final res = await http.get(
-      uri,
-      headers: {'Accept': 'application/json'},
-    );
+    final res = await http.get(uri, headers: {'Accept': 'application/json'});
 
     return res.tryGetData<Account>(Account.fromJson)?.number ?? '';
   }

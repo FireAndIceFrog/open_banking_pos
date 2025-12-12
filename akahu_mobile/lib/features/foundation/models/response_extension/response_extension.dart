@@ -22,6 +22,6 @@ extension ResponseExtension on Response {
       return null;
     }
     
-    return response.data != null ? fac(response.data) : null;
+    return fac(response.data);
   }
 }

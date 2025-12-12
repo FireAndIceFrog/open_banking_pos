@@ -30,3 +30,5 @@ analyzer:
     - "**/*.freezed.dart"
   errors:
     invalid_annotation_target: ignore
+    deprecated_member_use: ignore
+    constant_identifier_names: ignore

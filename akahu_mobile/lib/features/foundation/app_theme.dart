@@ -12,8 +12,6 @@ ThemeData buildAppTheme() {
     onSecondary: Colors.white,
     error: AppColors.error,
     onError: Colors.white,
-    background: AppColors.primary,
-    onBackground: AppColors.textPrimary,
     surface: Colors.white,
     onSurface: AppColors.textPrimary,
   );

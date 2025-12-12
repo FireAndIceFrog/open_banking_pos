@@ -5,10 +5,13 @@ import '../components/status_banner.dart';
 import '../services/payment_controller.dart';
 import '../../accounts/providers/selected_account_provider.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'dart:io' show Platform;
 
 /// Make Payment screen: scans QR to get intentId, confirms using selected account.
 class MakePaymentScreen extends HookConsumerWidget {
   const MakePaymentScreen({super.key});
+
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,19 +19,18 @@ class MakePaymentScreen extends HookConsumerWidget {
     final controller = ref.read(paymentControllerProvider.notifier);
     final selectedAccount = ref.watch(selectedAccountProvider);
 
-    void _onScan(String code) {
+    void onScan(String code) {
       controller.setScannedIntent(code);
     }
 
-    Future<void> _confirm() async {
+    Future<void> confirm() async {
       if (selectedAccount == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Select an account first from Accounts')),
         );
         return;
       }
-      final fromUserId = selectedAccount.id!; // use selected account id for confirm
-      await controller.confirm(fromUserId: fromUserId);
+      await controller.confirm();
     }
 
     return Column(
@@ -46,6 +48,15 @@ class MakePaymentScreen extends HookConsumerWidget {
             borderRadius: BorderRadius.circular(12),
             child: Stack(
               children: [
+                if(Platform.isWindows || Platform.isLinux || Platform.isMacOS)
+                  Center(
+                    child: Text(
+                      'QR Scanner not supported on desktop platforms.',
+                      style: AppText.bodySecondary,
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                else
                 MobileScanner(
                   controller: MobileScannerController(
                     detectionSpeed: DetectionSpeed.normal,
@@ -61,7 +72,7 @@ class MakePaymentScreen extends HookConsumerWidget {
                       );
                       return;
                     }
-                    _onScan(raw);
+                    onScan(raw);
                   },
                 ),
                 Positioned(
@@ -91,7 +102,7 @@ class MakePaymentScreen extends HookConsumerWidget {
         const SizedBox(height: 16),
 
         ElevatedButton(
-          onPressed: paymentState.paymentIntent?.intentId != null ? _confirm : null,
+          onPressed: paymentState.paymentIntent?.intentId != null ? confirm : null,
           child: const Text('Confirm Payment'),
         ),
 

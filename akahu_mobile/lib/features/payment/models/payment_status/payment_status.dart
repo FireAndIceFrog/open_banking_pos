@@ -2,8 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'payment_status.g.dart';
 
-/// Akahu payment status values:
-/// READY | PENDING_APPROVAL | PAUSED | SENT | DECLINED | ERROR | CANCELLED
 @JsonEnum(alwaysCreate: true)
 enum PaymentStatus {
   @JsonValue('READY')

@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PaymentService } from '../../../../../features/payment/services/paymentService';
 import { GetPaymentStatusResponse } from '@/features/payment/types/response/GetPaymentStatusResponse';
-import { IntentIdSchema } from '@/features/payment/types/params/IntentIdParamsSchema';
+import { IntentIdParamsSchema, IntentIdSchema } from '@/features/payment/types/params/IntentIdParamsSchema';
 import { container } from '@/features/foundation/di/container';
 import { TYPES } from '@/features/foundation/di/types';
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ intentId: string }> }) {
   try {
-    const intentId = (await params).intentId;
+    let intentId: string;
 
     // Zod-validated intentId
     try {
-      IntentIdSchema.parse(intentId);
+      intentId = IntentIdParamsSchema.parse(await params).intentId;
     } catch (err: any) {
       const reason = err?.issues?.[0]?.message ?? 'Invalid intentId';
       return NextResponse.json(

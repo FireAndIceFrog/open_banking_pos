@@ -1,3 +1,4 @@
+import 'package:akahu_mobile/features/payment/utils/format_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -6,7 +7,6 @@ import '../../foundation/app_colors.dart';
 import '../components/numpad.dart';
 import '../components/status_banner.dart';
 import '../services/payment_controller.dart';
-import '../../accounts/providers/selected_account_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 /// POS screen: amount entry via Numpad, Start -> shows QR, polls status.
@@ -19,52 +19,31 @@ class PosScreen extends HookConsumerWidget {
     final paymentState = ref.watch(paymentControllerProvider);
     final controller = ref.read(paymentControllerProvider.notifier);
 
-    String _formatAmount(String raw) {
-      // Keep digits only, then format to 2 decimal places
-      final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
-      if (digits.isEmpty) return '0.00';
-      final value = int.parse(digits);
-      final dollars = (value / 100).toStringAsFixed(2);
-      return dollars;
-    }
-
-    void _appendDigit(String d) {
+    void appendDigit(String d) {
       final raw = amount.value.replaceAll('.', '');
       final next = raw + d;
-      amount.value = _formatAmount(next);
+      amount.value = formatAmount(next);
     }
 
-    void _backspace() {
+    void backspace() {
       final raw = amount.value.replaceAll('.', '');
       if (raw.isEmpty) {
         amount.value = '0.00';
         return;
       }
       final next = raw.substring(0, raw.length - 1);
-      amount.value = _formatAmount(next);
+      amount.value = formatAmount(next);
     }
 
-    void _clear() {
+    void clear() {
       amount.value = '0.00';
     }
 
-    Future<void> _start() async {
-      final selected = ref.read(selectedAccountProvider);
-      if (selected == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Select an account first from Accounts'),
-          ),
-        );
-        return;
-      }
-      final toUserId = selected.id!; // use selected account id as target
+    Future<void> start() async {
       final amt = double.tryParse(amount.value.replaceAll('\$', '')) ?? 0.0;
       await controller.create(
-        toUserId: toUserId,
         amountCents: (amt * 100).toInt(),
       );
-      controller.startPolling();
     }
 
     return Column(
@@ -103,14 +82,14 @@ class PosScreen extends HookConsumerWidget {
 
               // Numpad input
               Numpad(
-                onDigit: _appendDigit,
-                onBackspace: _backspace,
-                onClear: _clear,
+                onDigit: appendDigit,
+                onBackspace: backspace,
+                onClear: clear,
               ),
 
               const SizedBox(height: 16),
 
-              ElevatedButton(onPressed: _start, child: const Text('Start')),
+              ElevatedButton(onPressed: start, child: const Text('Start')),
             ]
           : [
               Center(

@@ -1,7 +1,6 @@
 import type { IPaymentRepo } from '../repo/IPaymentRepo';
 import { inject, injectable } from 'inversify';
 import { CreatePaymentRequestInput } from '../types/request/CreatePaymentRequest';
-import { ConfirmPaymentRequestInput } from '../types/request/ConfirmPaymentRequest';
 import { CreatePaymentResponse } from '../types/response/CreatePaymentResponse';
 import { ConfirmPaymentResponse } from '../types/response/ConfirmPaymentResponse';
 import { GetPaymentStatusResponse } from '../types/response/GetPaymentStatusResponse';
@@ -15,8 +14,8 @@ export class PaymentService {
     @inject(TYPES.PaymentRepo) private repo: IPaymentRepo,
   ) {}
 
-  async createIntent(payload: CreatePaymentRequestInput): Promise<CreatePaymentResponse> {
-    const { toUserId, amountCents } = payload;
+  async createIntent(toUserId:string, payload: CreatePaymentRequestInput): Promise<CreatePaymentResponse> {
+    const { amountCents } = payload;
 
     const intentId = uuidv7();
     const nowIso = new Date().toISOString();
@@ -53,8 +52,7 @@ export class PaymentService {
     };
   }
 
-  async confirmIntent(intentId: string, payload: ConfirmPaymentRequestInput): Promise<ConfirmPaymentResponse> {
-    const { fromUserId } = payload;
+  async confirmIntent(intentId: string, fromUserId: string): Promise<ConfirmPaymentResponse> {
     const intent = this.repo.get(intentId);
     if (!intent) {
       return { success: false, data: { reason: 'Intent not found' } };

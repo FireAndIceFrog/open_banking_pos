@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:akahu_mobile/features/accounts/models/account/account.dart';
-import 'package:akahu_mobile/features/accounts/providers/selected_account_provider.dart';
 import 'package:akahu_mobile/features/payment/models/payment_intent/payment_intent.dart';
 import 'package:akahu_mobile/features/payment/models/payment_state/payment_state.dart';
 import 'package:akahu_mobile/features/payment/models/payment_status/payment_status.dart';
@@ -9,24 +7,21 @@ import 'payment_api_service.dart';
 
 class PaymentController extends Notifier<PaymentState> {
   late final PaymentApiService _api;
-  late final Account? _selectedAccount;
   Timer? _poller;
 
   @override
   PaymentState build() {
     _api = ref.watch(paymentApiServiceProvider);
-    _selectedAccount = ref.watch(selectedAccountProvider);
     
     return const PaymentState();
   }
 
   Future<void> create({
-    required String toUserId,
     required int amountCents,
   }) async {
     final paymentIntent = PaymentIntent(
       intentId: null,
-      toUserId: toUserId,
+      toUserId: null,
       amountCents: amountCents,
       fromUserId: null,
       status: null,
@@ -42,6 +37,7 @@ class PaymentController extends Notifier<PaymentState> {
         status: PaymentStatus.PENDING_APPROVAL,
       )
     );
+    startPolling();
   }
 
   void startPolling({Duration interval = const Duration(seconds: 10)}) {
@@ -50,9 +46,11 @@ class PaymentController extends Notifier<PaymentState> {
     state = state.copyWith(isPolling: true);
 
     _poller = Timer.periodic(interval, (timer) async {
+      if(!ref.mounted) return;
+
       final id = state.paymentIntent?.intentId;
       if (id == null) {
-        _stopPolling();
+        stopPolling();
         return;
       }
       try {
@@ -61,7 +59,7 @@ class PaymentController extends Notifier<PaymentState> {
           paymentIntent: state.paymentIntent?.copyWith(status: status, reason: reason)
         );
         if (status == PaymentStatus.SENT || status == PaymentStatus.DECLINED) {
-          _stopPolling();
+          stopPolling();
         }
       } catch (e) {
         // On error, keep polling, but surface reason
@@ -72,14 +70,14 @@ class PaymentController extends Notifier<PaymentState> {
     });
   }
 
-  Future<void> confirm({required String fromUserId}) async {
+  Future<void> confirm() async {
     final id = state.paymentIntent?.intentId;
     if (id == null) return;
 
     final reason = await _api.confirmIntent(
       payment: PaymentIntent(
         intentId: id,
-        fromUserId: fromUserId,
+        fromUserId: null,
         toUserId: null,
         amountCents: null,
         status: null,
@@ -107,12 +105,18 @@ class PaymentController extends Notifier<PaymentState> {
     );
   }
 
-  void _stopPolling() {
+  Future<void> stopPolling() async {
     _poller?.cancel();
     _poller = null;
-    state = state.copyWith(isPolling: false, paymentIntent: null);
+    await Future.delayed(Duration(milliseconds: 300));
+    if (ref.mounted) {
+      state = PaymentState(
+        paymentIntent: null,
+        isPolling: false,
+      );
+    }
   }
-
+  
 }
 
 // Providers
@@ -122,5 +126,5 @@ final paymentControllerProvider =
       return PaymentController();
     }, dependencies: [
       paymentApiServiceProvider,
-      selectedAccountProvider,
-    ]);
+    ],
+    );

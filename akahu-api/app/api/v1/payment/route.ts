@@ -11,7 +11,12 @@ export async function POST(req: NextRequest) {
     const body = CreatePaymentRequest.parse(raw);
 
     const paymentService = container.get<PaymentService>(TYPES.PaymentService);
-    const result: CreatePaymentResponse = await paymentService.createIntent(body as CreatePaymentRequestInput);
+    
+    const result: CreatePaymentResponse = await paymentService.createIntent(
+      process.env.USER_TOKEN || "", 
+      body as CreatePaymentRequestInput,
+    );
+
     return NextResponse.json(result, { status: result.success ? 200 : 400 });
   } catch (err: any) {
     const reason = err?.issues?.[0]?.message ?? 'Invalid request';

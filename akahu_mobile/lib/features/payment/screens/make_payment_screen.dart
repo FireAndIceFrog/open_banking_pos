@@ -10,9 +10,7 @@ import 'dart:io' show Platform;
 /// Make Payment screen: scans QR to get intentId, confirms using selected account.
 class MakePaymentScreen extends HookConsumerWidget {
   const MakePaymentScreen({super.key});
-
-
-
+  
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paymentState = ref.watch(paymentControllerProvider);

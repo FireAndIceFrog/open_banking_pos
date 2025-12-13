@@ -7,7 +7,6 @@ export interface PaymentIntent {
   amountCents: number;
   status: PaymentStatus;
   reason?: string;
-  akahuTransferId?: string;
   createdAt: string; // ISO
   updatedAt: string; // ISO
 }
